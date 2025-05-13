@@ -23,6 +23,7 @@ namespace CleanArchitecture.Persistence
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
 
+            services.AddSingleton(RT.Comb.Provider.Sql);
         }
     }
 }

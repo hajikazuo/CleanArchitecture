@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UseCases.CreateUser;
+using CleanArchitecture.Application.UseCases.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,14 @@ namespace CleanArchitecture.WebApi.Controllers
         public UsersController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<List<GetAllUserResponse>>> GetAll(CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(new GetAllUserRequest(), cancellationToken);
+            return Ok(response);
         }
 
         [HttpPost]

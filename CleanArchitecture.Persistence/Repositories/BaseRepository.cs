@@ -2,6 +2,7 @@
 using CleanArchitecture.Domain.Interfaces;
 using CleanArchitecture.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using RT.Comb;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace CleanArchitecture.Persistence.Repositories
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         protected readonly AppDbContext _context;
+        private readonly ICombProvider _comb;
 
-        public BaseRepository(AppDbContext context)
+        public BaseRepository(AppDbContext context, ICombProvider comb)
         {
             _context = context;
+            _comb = comb;
         }
 
         public async Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken)
@@ -32,6 +35,7 @@ namespace CleanArchitecture.Persistence.Repositories
 
         public void Add(T entity)
         {
+            entity.Id = _comb.Create();
             entity.DateCreated = DateTimeOffset.UtcNow;
             _context.Add(entity);
         }

@@ -1,16 +1,16 @@
 using CleanArchitecture.Application.Services;
 using CleanArchitecture.Persistence;
 using CleanArchitecture.Persistence.Context;
+using CleanArchitecture.WebApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.ConfigurePersistenceApp(builder.Configuration);
 builder.Services.ConfigureApplicationApp();
+builder.Services.ConfigureCorsPolicy();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,8 +22,6 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -34,6 +32,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors();
 app.MapControllers();
 
 app.Run();
